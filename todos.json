@@ -1,0 +1,16 @@
+{
+  "resources": [
+    {
+      "todo": "Create CLI todo app",
+      "due_date": "2025-10-19",
+      "status": "Completed",
+      "priority": "High"
+    },
+    {
+      "todo": "wash the dishes",
+      "priority": "Low",
+      "status": "In Progress",
+      "due_date": "2025-10-17"
+    }
+  ]
+}
