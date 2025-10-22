@@ -1,6 +1,6 @@
 import argparse
 import json
-
+import builtins
 def sort_argument_checker(v):
     valid_values = ['s', 'p', 'd']
     if v not in valid_values:
@@ -39,14 +39,12 @@ class Todo_List:
     def delete_item(self, n):
         with open(self.todo_file, mode='r') as f:
             data = json.load(f)
-        with open(self.todo_file, mode='w') as f:
-            try:
-                del data['resources'][n-1]
+        try:
+            del data['resources'][n-1]
+            with open(self.todo_file, mode='w') as f:              
                 json.dump(data, f, indent=2)
-            except:
-                print("There's no such todo item")
-        # with open(self.todo_file, mode='r+') as f:
-
+        except(IndexError):
+            print("There's no such todo item")
 
     def add_item(self, todo, priority, status, due_date):
         data = {
@@ -94,7 +92,7 @@ def main():
 
     parser.add_argument('-l','--list', action="store_true",help='Display todo list')
     parser.add_argument('-d','--delete',metavar=' ', help='Delete item from todo list')
-    parser.add_argument('-a','--add', nargs=None, metavar=' ',help='Add todo item to the list. Accepts 4 arguments: todo,priority,status,due date')
+    parser.add_argument('-a','--add', action='store_true',help='Add todo item to the list')
     parser.add_argument('-c','--complete', nargs = 1, metavar=' ',help='Comlete todo item')
     parser.add_argument('-e','--edit', nargs=1, metavar='', type=int, help='Edit todo item. Enter the list number you want to edit')
     parser.add_argument('-s','--sort', nargs=1, metavar='', type=sort_argument_checker, help='Sort todo list by a column. Accepts values "p" - priority; "s" - status; "d" - due date')
