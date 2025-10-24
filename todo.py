@@ -1,6 +1,11 @@
 import argparse
 import json
-import builtins
+from configparser import ConfigParser
+
+config = ConfigParser()
+config.read('config.ini')
+config_data = config['DEFAULT']
+
 def sort_argument_checker(v):
     valid_values = ['s', 'p', 'd']
     if v not in valid_values:
@@ -8,7 +13,9 @@ def sort_argument_checker(v):
     return v
 
 class Todo_List:
-    todo_file = '/Users/sergii.biletskyi/Misc/AI/ai_learning_env/todo_app/todos.json'
+    
+    def __init__(self):
+        self.todo_file = config_data['file_path'] + '/' + config_data['file_name']
 
     def sort_todo_list(self, field):
         fields = {
@@ -22,18 +29,14 @@ class Todo_List:
             sorted_dict = {
                 'resources' : sorted_list
             }
-        count = 1
-        for todo in sorted_dict['resources']:
+        for count, todo in enumerate(sorted_dict['resources']):
             print(f"[{count}] \u23f5 {todo['todo']} | {todo['priority']} | {todo['status']} | {todo['due_date']}")
-            count += 1
 
     def display_todo_list(self):
         with open(self.todo_file, 'r') as f:
             data = json.load(f)
-            count = 1
-            for todo in data['resources']:
+            for count, todo in enumerate(data['resources']):
                 print(f"[{count}] \u23f5 {todo['todo']} | {todo['priority']} | {todo['status']} | {todo['due_date']}")
-                count += 1
 
 
     def delete_item(self, n):
