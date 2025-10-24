@@ -1,3 +1,4 @@
+'''CLI todo app'''
 import argparse
 import json
 from configparser import ConfigParser
@@ -6,18 +7,20 @@ config = ConfigParser()
 config.read('config.ini')
 config_data = config['DEFAULT']
 
-def sort_argument_checker(v):
+def sort_argument_checker(v: str) -> str:
+    '''checks if valid argument is passed for sorting'''
     valid_values = ['s', 'p', 'd']
     if v not in valid_values:
         raise argparse.ArgumentTypeError('Wrong value!!! Accepted values: "p" - priority; "s" - status; "d" - due date')
     return v
 
 class Todo_List:
-    
+    '''todo list class'''
     def __init__(self):
         self.todo_file = config_data['file_path'] + '/' + config_data['file_name']
 
     def sort_todo_list(self, field):
+        '''sorts todo list by either priority, status or due_date'''
         fields = {
             'p': 'priority',
             's': 'status',
@@ -63,6 +66,7 @@ class Todo_List:
             json.dump(existing_json, f, indent=2)
 
     def complete_item(self, n):
+        '''changes status of the specified todo item to Completed'''
         with open(self.todo_file, mode='r') as f:
             data = json.load(f)
             if n > len(data['resources']):
