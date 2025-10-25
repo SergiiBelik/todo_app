@@ -2,6 +2,19 @@
 import argparse
 import json
 from configparser import ConfigParser
+from typing import TypedDict
+
+class TodoItem(TypedDict):
+    todo: str
+    status: str
+    priority: str
+    due_date: str
+
+class todoData(TypedDict):
+    resources: list[TodoItem]
+
+
+
 
 config = ConfigParser()
 config.read('config.ini')
@@ -19,7 +32,7 @@ class Todo_List:
     def __init__(self):
         self.todo_file = config_data['file_path'] + '/' + config_data['file_name']
 
-    def sort_todo_list(self, field):
+    def sort_todo_list(self, field: str) -> None:
         '''sorts todo list by either priority, status or due_date'''
         fields = {
             'p': 'priority',
@@ -35,14 +48,14 @@ class Todo_List:
         for count, todo in enumerate(sorted_dict['resources']):
             print(f"[{count}] \u23f5 {todo['todo']} | {todo['priority']} | {todo['status']} | {todo['due_date']}")
 
-    def display_todo_list(self):
+    def display_todo_list(self) -> None:
         with open(self.todo_file, 'r') as f:
             data = json.load(f)
             for count, todo in enumerate(data['resources']):
                 print(f"[{count}] \u23f5 {todo['todo']} | {todo['priority']} | {todo['status']} | {todo['due_date']}")
 
 
-    def delete_item(self, n):
+    def delete_item(self, n: int) -> None:
         with open(self.todo_file, mode='r') as f:
             data = json.load(f)
         try:
@@ -52,7 +65,7 @@ class Todo_List:
         except(IndexError):
             print("There's no such todo item")
 
-    def add_item(self, todo, priority, status, due_date):
+    def add_item(self, todo: str, priority: str, status: str, due_date: str) -> None:
         data = {
             'todo': todo,
             'priority': priority,
@@ -65,7 +78,7 @@ class Todo_List:
         with open(self.todo_file, mode='w') as f:
             json.dump(existing_json, f, indent=2)
 
-    def complete_item(self, n):
+    def complete_item(self, n: int) -> None:
         '''changes status of the specified todo item to Completed'''
         with open(self.todo_file, mode='r') as f:
             data = json.load(f)
@@ -77,7 +90,7 @@ class Todo_List:
                     data['resources'][n-1]['status'] = "Completed"
                     json.dump(data, f, indent=2)
 
-    def edit_item(self, n, data, todo='', priority='', status='', due_date=''):       
+    def edit_item(self, n: int, data: todoData, todo: str = '', priority: str ='', status: str ='', due_date: str =''):
                 if len(todo) > 0:
                     data['resources'][n-1]['todo'] = todo
                 if len(priority) > 0:
